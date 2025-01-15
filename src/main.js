@@ -1,18 +1,16 @@
 import { generateClient } from "aws-amplify/data";
-import type { Schema } from "../amplify/data/resource";
 import './style.css';
 import { Amplify } from 'aws-amplify';
 import outputs from '../amplify_outputs.json';
 
 Amplify.configure(outputs);
 
-
-const client = generateClient<Schema>();
+const client = generateClient();
 
 document.addEventListener("DOMContentLoaded", function () {
-    const todos: Array<Schema["Todo"]["type"]> = [];
-    const todoList = document.getElementById("todoList") as HTMLUListElement;
-    const addTodoButton = document.getElementById("addTodo") as HTMLButtonElement;
+    const todos = [];
+    const todoList = document.getElementById("todoList");
+    const addTodoButton = document.getElementById("addTodo");
 
     addTodoButton.addEventListener("click", createTodo);
 
@@ -20,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
         todoList.innerHTML = '';
         todos.forEach(todo => {
             const li = document.createElement('li');
-            li.textContent = todo.content ?? '';
+            li.textContent = todo.content || '';
             todoList.appendChild(li);
         });
     }
@@ -43,7 +41,6 @@ document.addEventListener("DOMContentLoaded", function () {
           });
       }
   }
-
 
     client.models.Todo.observeQuery().subscribe({
         next: (data) => {
